@@ -1,57 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Button, Form, Input, Label } from "reactstrap";
-import { useParams } from "react-router-dom";
-import axios from "axios";
+import { Link, useParams } from "react-router-dom";
 
-const initialState = {
-  class_name: "",
-  class_type: "",
-  start: "",
-  duration: "",
-  dropdown: "",
-  location: "",
-  maxSize: "",
-  currentClients: "",
-};
-
-const EditClassForm = (props) => {
+const EditClassForm = ({
+  values,
+  change,
+  submit,
+  disabled,
+  errors,
+  handleDelete,
+}) => {
   const { class_id } = useParams();
-  const [editClass, setEditClass] = useState(initialState);
-  const { submit, change, disabled, errors } = props;
-
-  useEffect(() => {
-    axios
-      .get(
-        `https://anywhere-fitness-07-backend.herokuapp.com/api/classes/${class_id}`
-      )
-      .then((res) => {
-        console.log(res);
-        setEditClass(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [class_id]);
 
   const onSubmit = (evt) => {
     evt.preventDefault();
     submit();
   };
 
-  //   const inputChange = (name, value) => {
-  //     setEditClass({
-  //       ...editClass,
-  //       [name]: value,
-  //     });
-  //   };
-
   const onChange = (evt) => {
     const { name, value } = evt.target;
-    setEditClass({
-      ...editClass,
-      [name]: value,
-    });
     change(name, value);
+  };
+
+  const onDelete = (id) => {
+    handleDelete(id);
   };
 
   return (
@@ -61,15 +33,15 @@ const EditClassForm = (props) => {
       <div>
         <div>{errors.class_name}</div>
         <div>{errors.class_type}</div>
-        <div>{errors.dropdown}</div>
-        <div>{errors.start}</div>
+        <div>{errors.intensity_level}</div>
+        <div>{errors.start_time}</div>
       </div>
       <Label>
         Class Name:
         <Input
           name="class_name"
           type="text"
-          value={editClass.class_name}
+          value={values.class_name}
           onChange={onChange}
         />
       </Label>
@@ -79,7 +51,7 @@ const EditClassForm = (props) => {
         <Input
           type="text"
           name="class_type"
-          value={editClass.class_type}
+          value={values.class_type}
           onChange={onChange}
         />
       </Label>
@@ -87,9 +59,9 @@ const EditClassForm = (props) => {
       <Label>
         Start Time
         <Input
-          type="time"
-          name="start"
-          value={editClass.start}
+          type="string"
+          name="start_time"
+          value={values.start_time}
           onChange={onChange}
         />
       </Label>
@@ -98,23 +70,27 @@ const EditClassForm = (props) => {
         Duration
         <Input
           name="duration"
-          type="number"
-          min="0"
-          placeholder="minutes"
-          value={editClass.duration}
+          type="string"
+          //min="0"
+          placeholder="duration"
+          value={values.duration}
           onChange={onChange}
         />
       </Label>
       <br />
       <Label>
         Intensity Level
-        <select name="dropdown" value={editClass.dropdown} onChange={onChange}>
+        <select
+          name="intensity_level"
+          value={values.intensity_level}
+          onChange={onChange}
+        >
           <option>-Select Intensity-</option>
-          <option>1</option>
-          <option>2</option>
-          <option>3</option>
-          <option>4</option>
-          <option>5</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
         </select>
       </Label>
       <br />
@@ -123,7 +99,7 @@ const EditClassForm = (props) => {
         <Input
           type="text"
           name="location"
-          value={editClass.location}
+          value={values.location}
           onChange={onChange}
         />
       </Label>
@@ -131,10 +107,10 @@ const EditClassForm = (props) => {
       <Label>
         Current Clients
         <Input
-          name="currentClients"
+          name="current_clients"
           type="number"
-          min="0"
-          value={editClass.currentClients}
+          //min="0"
+          value={values.current_clients}
           onChange={onChange}
         />
       </Label>
@@ -143,9 +119,9 @@ const EditClassForm = (props) => {
         Max Class Size
         <Input
           type="number"
-          min="0"
-          name="maxSize"
-          value={editClass.maxSize}
+          //min="0"
+          name="max_class_size"
+          value={values.max_class_size}
           onChange={onChange}
         />
       </Label>
@@ -153,8 +129,12 @@ const EditClassForm = (props) => {
 
       {/* ERRORS */}
       <Button disabled={disabled} type="submit">
-        Create Class
+        Submit
       </Button>
+      <Link to="/available-classes">
+        <input type="button" value="Cancel" />
+      </Link>
+      <Button onClick={() => onDelete(class_id)}>Delete</Button>
     </Form>
   );
 };
