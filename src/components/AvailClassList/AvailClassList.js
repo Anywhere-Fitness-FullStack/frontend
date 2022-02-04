@@ -1,34 +1,28 @@
-import React, {useState, useEffect} from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
-import ClassFilter from './ClassFilter'
-import { FilterContainer } from '../../styled-comps/index'
+import ClassFilter from "./ClassFilter";
+import { FilterContainer } from "../../styled-comps/index";
 
 const AvailClassList = () => {
+  const initialState = [];
+  const [classes, setClasses] = useState(initialState);
 
-    const initialState = [];
-    const [classes, setClasses] = useState(initialState);
-    //const [reservedClass, setReservedClass] = useState([]);
-
-    useEffect(() => {
-      axios
-        .get('https://anywhere-fitness-07-backend.herokuapp.com/api/classes')
-        .then((res) => {
-          setClasses(res.data);
-        })
-        .catch((err) => console.log(err));
-    }, []);
-
-  
+  useEffect(() => {
+    axios
+      .get("https://anywhere-fitness-07-backend.herokuapp.com/api/classes")
+      .then((res) => {
+        setClasses(res.data);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   return (
-    
-        <FilterContainer>
-            <h2>Available Classes</h2>
-            <ClassFilter classes={classes} />
-        </FilterContainer>
-               
-    );
-}
+    <FilterContainer>
+      <h2>Available Classes</h2>
+      <ClassFilter classes={classes} />
+    </FilterContainer>
+  );
+};
 
 export default AvailClassList;
