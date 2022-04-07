@@ -17,6 +17,8 @@ Frontend: Schuyler Minor, Aaron Mendez, Hailey Magoline
 
 Backend: VERNON
 
+anywhere-fitness-fullstack.vercel.app
+
 <!-- The page will reload when you make changes.\
 You may also see any lint errors in the console.
 
